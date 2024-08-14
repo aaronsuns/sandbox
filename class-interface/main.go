@@ -2,15 +2,25 @@ package main
 
 import "fmt"
 
+type BaseProcessor struct{}
+
+func (bp BaseProcessor) SharedMethod() {
+	fmt.Println("This is a shared method")
+}
+
 type PaymentProcessor interface {
 	ProcessPayment(amount float64) error
 	GetPaymentStatus(paymentID string) (interface{}, error)
 }
 
 // Billogram implementation
-type Billogram struct{}
+type Billogram struct {
+	BaseProcessor
+}
 
 func (b Billogram) ProcessPayment(amount float64) error {
+	b.SharedMethod()
+
 	fmt.Printf("Processing Billogram payment of %.2f\n", amount)
 	return nil
 }
@@ -21,9 +31,12 @@ func (b Billogram) GetPaymentStatus(paymentID string) (interface{}, error) {
 }
 
 // Stripe implementation
-type Stripe struct{}
+type Stripe struct {
+	BaseProcessor
+}
 
 func (s Stripe) ProcessPayment(amount float64) error {
+	s.SharedMethod()
 	fmt.Printf("Processing Stripe payment of %.2f\n", amount)
 	return nil
 }
